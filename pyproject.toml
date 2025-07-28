@@ -1,10 +1,11 @@
 [project]
 name = "pdf"
 version = "0.1.0"
-description = "Add your description here"
+description = "pdf工具"
 requires-python = ">=3.12"
 dependencies = [
     "pymupdf>=1.26.3",
     "pypdf2>=3.0.1",
     "pyqt6>=6.9.1",
+    "pyinstaller>=6.10.0"
 ]

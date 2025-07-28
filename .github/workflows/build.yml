@@ -1,0 +1,42 @@
+name: Build and Release PDF Tool
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 当推送 tag 时触发，如 v0.1.0
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build exe with PyInstaller
+        run: |
+          uv run pyinstaller --onefile --noconsole main.py --name PDFTool --icon=assets/icon.ico
+
+      - name: Archive build
+        run: |
+          mkdir release
+          copy dist\PDFTool.exe release\PDFTool.exe
+
+      - name: Create Release and Upload Artifact
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/PDFTool.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
